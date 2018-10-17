@@ -1,4 +1,6 @@
 const passport = require('passport');
+const jwt = require("jsonwebtoken");
+const config = require("config");
 const UserAccount = require('../models/user.model');
 
 register = function(req, res) {
@@ -40,30 +42,38 @@ profile = function(req, res) {
     })    
 }
 
-profileByUserName = function(req, res) {
+profileByUserName = function(req, res){
     UserAccount.findOne({username: req.params.username})
     .then(function(user){
-        if(!user){
-            res.status(404).send({
-                message: "user not found with username "+req.params.username
-            });
+        if(!user){0
+            res.status(404).send({ message: "user not found with username "+req.params.username });
         }
         res.status(200).send(user);
     })
     .catch(function(err){
         if(err.kind == "ObjectId"){
-            return res.status(404).send({
-                message: "user not found with username "+req.params.username
-            });
+            res.status(404).send({ message: "user not found with username "+req.params.username });
         }
-        return res.status(500).send({
-            message: "error retrieving user with username "+req.params.username
-        });
+        res.status(500).send({ message: "error retrieving user with username "+req.params.username });
     })    
-}
+};
 
 login = function(req, res) {
-    res.status(200).send({message: "successfully logged in"});
+    UserAccount.findOne({username: req.body.username})
+    .then(function(user){
+        if(!user){
+            res.status(404).send({ message: "user not found with username "+req.params.username });
+        }
+        secret = config.get("secretKey");
+        const token = jwt.sign({id: user._id, username: user.username, email: user.email}, secret, { expiresIn: 86400, algorithm: "HS512"})
+        res.status(200).send({auth: true, token: token});
+    })
+    .catch(function(err){
+        if(err.kind == "ObjectId"){
+            res.status(404).send({ message: "user not found with username "+req.params.username });
+        }
+        res.status(500).send({ message: "error retrieving user with username "+req.params.username });
+    })
 };
 
 module.exports = {

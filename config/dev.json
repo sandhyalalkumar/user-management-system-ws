@@ -1,5 +1,6 @@
 {
     "dbConfig":{
         "mongoUri": "mongodb://localhost:27017/user-management-db"
-    }
+    },
+    "secretKey": "thesecretkeysisawesome"
 }

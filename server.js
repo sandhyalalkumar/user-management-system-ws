@@ -5,11 +5,14 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const expressJwt = require("express-jwt");
 const LocalStrategy = require('passport-local').Strategy;
+const routes = require('./app/routes/index.routes');
 
 const app = express();
 const port = process.env.PORT || 9000;
-dbConfig = config.get("dbConfig");
+const dbConfig = config.get("dbConfig");
+const secret = config.get("secretKey");
 
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useCreateIndex", true);
@@ -29,7 +32,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-const routes = require('./app/routes/index.routes');
+app.use(expressJwt({secret: secret}).unless({path: ['/login', '/register']}));
+
 app.use("/", routes);
 
 const UserAccount = require("./app/models/user.model");
