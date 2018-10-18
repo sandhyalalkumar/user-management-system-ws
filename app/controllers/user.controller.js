@@ -12,10 +12,10 @@ register = function(req, res) {
         }), req.body.password, function(err, account) {
         if (err) {
             console.log(err);
-            res.status(500).send({message: "Can't register user, internal server error"});
+            res.status(500).send({message: "can't register user, internal server error"});
         }
         passport.authenticate('local')(req, res, function () {
-            res.status(200).send({message: "User registered successfully"});
+            res.status(200).send({message: "user registered successfully"});
         });
     });
 }
@@ -64,7 +64,7 @@ login = function(req, res) {
         if(!user){
             res.status(404).send({ message: "user not found with username "+req.params.username });
         }
-        secret = config.get("secretKey");
+        const secret = config.get("secretKey");
         const token = jwt.sign({id: user._id, username: user.username, email: user.email}, secret, { expiresIn: 86400, algorithm: "HS512"})
         res.status(200).send({auth: true, token: token});
     })
