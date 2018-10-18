@@ -8,6 +8,6 @@ router.get("/blog/authername/:authername", blogController.findBlogByAuthorName);
 router.get("/blog/query", blogController.findBlogByQuery)
 router.get("/blogs", blogController.findAllBlogs);
 router.put("/blog/:blogId", blogController.updateBlog);
-router.delete("/blog/:blogId", blogController.deleteById);
+router.delete("/blog/:blogId", blogController.deleteBlogById);
 
 module.exports = router;

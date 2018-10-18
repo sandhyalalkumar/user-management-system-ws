@@ -15,7 +15,7 @@ const routeSegment = new Schema({
 });
 
 const blogSchema = new Schema({
-    title: String, 
+    title: { type: String, unique: true, required: true},
     authorId: String,
     authorName: String,
     description: String,
